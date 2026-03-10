@@ -9,6 +9,7 @@ int main()
     int screenWidth = 1000;
     int screenHeight = 800;
     int currentscreen = 0;
+    double startTime;
 
     InitWindow(screenWidth, screenHeight, "Pong window");
 
@@ -36,15 +37,34 @@ int main()
                 DrawText("Press Enter to Start Game!", 250, 400, 30, WHITE);
                 if (IsKeyPressed(KEY_ENTER))
                     currentscreen = 1;
+                    startTime = 0;  //reset timer in case the player goes back to the title screen
                 break;
-
             }
+
             case 1: {
                 //timer
-                
+                if (startTime == 0)
+                    startTime = GetTime();   // start timer once
+
+                double elapsed = GetTime() - startTime;
+                int countdown = 3 - (int)elapsed;
+
+                if (countdown > 0)
+                {
+                    char text[10];
+                    sprintf(text, "%d", countdown);
+                    DrawText(text, 450, 350, 80, WHITE);
+                }
+                else
+                {
+                    currentscreen = 2;
+                }
+                break;
+            }
+            case 2: {
                 //playGame()
                 DrawText("insert gameplay function here", 250, 400, 30, WHITE);
-                //break;
+                break;
             }
         }
 
