@@ -1,0 +1,53 @@
+/*Thomas Silva*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <raylib.h>
+struct rectPos {
+    int g;
+    int p;
+}rectPos;
+int main() {
+    /* Init */
+    const int screenWidth = 1000;
+    const int screenHeight = 800;
+    int ballRadius = 20;
+    InitWindow(screenWidth, screenHeight, "Pong");
+    // ball/paddle positions on start
+    Vector2 ballPosition = { GetScreenWidth()/2, GetScreenHeight()/2 };
+    rectPos.g = screenHeight/2;
+    rectPos.p = screenHeight/2;
+    Vector2 ballSpeed = { 5, 4};
+    SetTargetFPS(60);
+    /* Main Loop */
+    while (!WindowShouldClose()) { //main loop
+        //Ball collision
+        if ((ballPosition.x >= (GetScreenWidth() - ballRadius)) || (ballPosition.x <= ballRadius)) ballSpeed.x *= -1.0;
+        if ((ballPosition.y >= (GetScreenHeight() - ballRadius)) || (ballPosition.y <= ballRadius)) ballSpeed.y *= -1.01;
+        if (ballPosition.x <= 125 && (ballPosition.y == rectPos.g + 75 || ballPosition.y == rectPos.g - 75)) ballSpeed.x *= -1.0;
+        if (ballPosition.x <= 125 && (ballPosition.y == rectPos.g + 75 || ballPosition.y == rectPos.g - 75)) ballSpeed.y *= -1.01;
+        //green movement
+        if (IsKeyDown(KEY_W)) rectPos.g -= 15;
+        if (IsKeyDown(KEY_S)) rectPos.g += 15;
+        if (rectPos.g < 0) rectPos.g = 0;
+        if (rectPos.g > 650) rectPos.g = 650;
+        //purple movement
+        if (IsKeyDown(KEY_UP)) rectPos.p -= 15;
+        if (IsKeyDown(KEY_DOWN)) rectPos.p += 15;
+        if (rectPos.p < 75) rectPos.p = 75;
+        if (rectPos.p > 650) rectPos.p = 650;
+
+        ballPosition.x += ballSpeed.x;
+        ballPosition.y += ballSpeed.y;
+
+
+
+
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+        DrawRectangle(100, rectPos.g, 25, 150, GREEN);
+        DrawRectangle(900, rectPos.p, 20, 150, PURPLE);
+        DrawCircleV(ballPosition, (float)ballRadius, BLACK);
+        EndDrawing();
+    }
+}
