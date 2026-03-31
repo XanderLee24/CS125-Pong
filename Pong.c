@@ -70,10 +70,10 @@ int main() {
             // ....Score Screen....
             case 3: {
                 //Draw Score Features
-                DrawText("SCORE: ", 385, (screenHeight/2)-80, 75, PINK);
+                DrawText("SCORE: ", 365, (screenHeight/2)-80, 75, PINK);
                 DrawRectangle(225, screenHeight/2, 550, 25, WHITE);
-                DrawText(Gscore, (screenWidth/2)-125, (screenHeight/2)+50, 75, GREEN);
-                DrawText(Pscore, (screenWidth/2)+125, (screenHeight/2)+50, 75, PURPLE);
+                DrawText(Gscore, (screenWidth/2)-150, (screenHeight/2)+50, 75, GREEN);
+                DrawText(Pscore, (screenWidth/2)+115, (screenHeight/2)+50, 75, PURPLE);
                 DrawText("Press Enter to Play Again", (screenWidth/2)-345   , (screenHeight/2)-200, 50, PINK);
 
                 if (IsKeyPressed(KEY_ENTER)) {  //Move back to timer if enter is pressed
@@ -83,15 +83,11 @@ int main() {
                 break;
             }
         }
-
-
-
+        
         EndDrawing();
-        //----------------------------------------------------------------------------------
     }
 
     // De-Initialization
-    //--------------------------------------------------------------------------------------
     CloseWindow();
     return 0;
 }
