@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <raylib.h>
 #include <time.h>
+
 struct rectPos {
     int g;
     int p;
@@ -14,17 +15,23 @@ int main() {
     const int screenWidth = 1000;
     const int screenHeight = 800;
     const float paddleHeight = 150.0f;
-    float bounce = (rand()%4+13)/100.0f;
+    // Rand gen for bounce amount
+    float bounce = (rand()%4+10)/100.0f;
     srand(time(NULL));
-    int ballRadius = 20;
+    //
+    // Window init
     InitWindow(screenWidth, screenHeight, "Pong");
     // ball/paddle positions on start
+    //
+    int ballRadius = 20;
     Vector2 ballPosition = { GetScreenWidth()/2, GetScreenHeight()/2 };
     rectPos.g = screenHeight/2;
     rectPos.p = screenHeight/2;
-    Vector2 ballSpeed = { 5, 4};
+    Vector2 ballSpeed = { 10, 7};
     Rectangle greenPaddle = { 100, (float)rectPos.g, 25, 150 };
     Rectangle purplePaddle = { 900, (float)rectPos.p, 20, 150 };
+    //
+    //
     SetTargetFPS(60);
     /* Main Loop */
     while (!WindowShouldClose()) { //main loop
@@ -33,17 +40,18 @@ int main() {
         if ((ballPosition.y >= (GetScreenHeight() - ballRadius)) || (ballPosition.y <= ballRadius)) ballSpeed.y *= -1.1;
         if (CheckCollisionCircleRec(ballPosition, (float)ballRadius, greenPaddle)) {
             if (ballSpeed.x < 0) { // Only bounce if moving left
-                ballSpeed.x *= -1.05f;
-
+                ballSpeed.x *= -1.1f;
+                // finds the center of the paddle
                 float paddleCenter = rectPos.g + (paddleHeight / 2.0f);
+                // calculates how far the ball is from the center
                 float distanceFromCenter = ballPosition.y - paddleCenter;
-
+                // changes speed based on how far the ball is away from center
                 ballSpeed.y = distanceFromCenter * bounce;
             }
         }
         if (CheckCollisionCircleRec(ballPosition, (float)ballRadius, purplePaddle)) {
             if (ballSpeed.x > 0) { // Only bounce if moving right
-                ballSpeed.x *= -1.05f;
+                ballSpeed.x *= -1.1f;
 
                 float paddleCenter = rectPos.p + (paddleHeight / 2.0f);
                 float distanceFromCenter = ballPosition.y - paddleCenter;
@@ -64,6 +72,7 @@ int main() {
         if (rectPos.g > 650) rectPos.g = 650;
         if (greenPaddle.y < 0) greenPaddle.y = 0;
         if (greenPaddle.y > 650) greenPaddle.y = 650;
+        //green movement
         //purple movement
         if (IsKeyDown(KEY_UP)) {
             rectPos.p -= 15;
@@ -77,7 +86,7 @@ int main() {
         if (purplePaddle.y < 0) purplePaddle.y = 0;
         if (purplePaddle.y > 650) purplePaddle.y = 650;
         if (rectPos.p > 650) rectPos.p = 650;
-
+        //purple movement
         ballPosition.x += ballSpeed.x;
         ballPosition.y += ballSpeed.y;
 
@@ -90,5 +99,6 @@ int main() {
         DrawRectangle(900, rectPos.p, 20, 150, PURPLE);
         DrawCircleV(ballPosition, (float)ballRadius, BLACK);
         EndDrawing();
+
     }
 }
