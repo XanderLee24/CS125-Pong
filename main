@@ -1,104 +1,75 @@
-/*Thomas Silva*/
-
+#include "raylib.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <raylib.h>
 #include <time.h>
+#include "Functions.h"
 
-struct rectPos {
-    int g;
-    int p;
-}rectPos;
-int main() {
-    /* Init */
+int main()
+{
+    // Initialization
+    int screenWidth = 1000;
+    int screenHeight = 800;
+    int currentscreen = 0;
+    double startTime;
+    greenScore();
+    purpleScore();
 
-    const int screenWidth = 1000;
-    const int screenHeight = 800;
-    const float paddleHeight = 150.0f;
-    // Rand gen for bounce amount
-    float bounce = (rand()%4+10)/100.0f;
-    srand(time(NULL));
-    //
-    // Window init
-    InitWindow(screenWidth, screenHeight, "Pong");
-    // ball/paddle positions on start
-    //
-    int ballRadius = 20;
-    Vector2 ballPosition = { GetScreenWidth()/2, GetScreenHeight()/2 };
-    rectPos.g = screenHeight/2;
-    rectPos.p = screenHeight/2;
-    Vector2 ballSpeed = { 10, 7};
-    Rectangle greenPaddle = { 100, (float)rectPos.g, 25, 150 };
-    Rectangle purplePaddle = { 900, (float)rectPos.p, 20, 150 };
-    //
-    //
-    SetTargetFPS(60);
-    /* Main Loop */
-    while (!WindowShouldClose()) { //main loop
-        //Ball collision
-        if ((ballPosition.x >= (GetScreenWidth() - ballRadius)) || (ballPosition.x <= ballRadius)) ballSpeed.x *= -1.0;
-        if ((ballPosition.y >= (GetScreenHeight() - ballRadius)) || (ballPosition.y <= ballRadius)) ballSpeed.y *= -1.1;
-        if (CheckCollisionCircleRec(ballPosition, (float)ballRadius, greenPaddle)) {
-            if (ballSpeed.x < 0) { // Only bounce if moving left
-                ballSpeed.x *= -1.1f;
-                // finds the center of the paddle
-                float paddleCenter = rectPos.g + (paddleHeight / 2.0f);
-                // calculates how far the ball is from the center
-                float distanceFromCenter = ballPosition.y - paddleCenter;
-                // changes speed based on how far the ball is away from center
-                ballSpeed.y = distanceFromCenter * bounce;
-            }
-        }
-        if (CheckCollisionCircleRec(ballPosition, (float)ballRadius, purplePaddle)) {
-            if (ballSpeed.x > 0) { // Only bounce if moving right
-                ballSpeed.x *= -1.1f;
+    InitWindow(screenWidth, screenHeight, "Pong window");
 
-                float paddleCenter = rectPos.p + (paddleHeight / 2.0f);
-                float distanceFromCenter = ballPosition.y - paddleCenter;
+    SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
+    //--------------------------------------------------------------------------------------
 
-                ballSpeed.y = distanceFromCenter * bounce;
-            }
-        }
-        //green movement
-        if (IsKeyDown(KEY_W)) {
-            rectPos.g -= 15;
-            greenPaddle.y -=15;
-        }
-        if (IsKeyDown(KEY_S)) {
-            rectPos.g += 15;
-            greenPaddle.y += 15;
-        }
-        if (rectPos.g < 0) rectPos.g = 0;
-        if (rectPos.g > 650) rectPos.g = 650;
-        if (greenPaddle.y < 0) greenPaddle.y = 0;
-        if (greenPaddle.y > 650) greenPaddle.y = 650;
-        //green movement
-        //purple movement
-        if (IsKeyDown(KEY_UP)) {
-            rectPos.p -= 15;
-            purplePaddle.y -=15;
-        }
-        if (IsKeyDown(KEY_DOWN)) {
-            rectPos.p += 15;
-            purplePaddle.y += 15;
-        }
-        if (rectPos.p < 0) rectPos.p = 0;
-        if (purplePaddle.y < 0) purplePaddle.y = 0;
-        if (purplePaddle.y > 650) purplePaddle.y = 650;
-        if (rectPos.p > 650) rectPos.p = 650;
-        //purple movement
-        ballPosition.x += ballSpeed.x;
-        ballPosition.y += ballSpeed.y;
-
-
-
-
+    // Main game loop
+    while (!WindowShouldClose())    // Detect window close button or ESC key
+    {
         BeginDrawing();
-        ClearBackground(RAYWHITE);
-        DrawRectangle(100, rectPos.g, 25, 150, GREEN);
-        DrawRectangle(900, rectPos.p, 20, 150, PURPLE);
-        DrawCircleV(ballPosition, (float)ballRadius, BLACK);
-        EndDrawing();
 
+        BuildMapBasic(screenWidth, screenHeight); // Custom Function
+
+        switch (currentscreen) {
+            case 0: {
+                // Start Screen
+                DrawText("Press Enter to Start Game!", 270, 400, 30, WHITE);
+                if (IsKeyPressed(KEY_ENTER))
+                    currentscreen = 1;
+                    startTime = 0;  //reset timer in case the player goes back to the title screen
+                break;
+            }
+
+            case 1: {
+                //timer
+                if (startTime == 0)
+                    startTime = GetTime();   // start timer once
+
+                double elapsed = GetTime() - startTime;
+                int countdown = 3 - (int)elapsed;
+
+                if (countdown > 0)
+                {
+                    char text[10];
+                    sprintf(text, "%d", countdown);
+                    DrawText(text, 495, 350, 80, WHITE);
+                }
+                else
+                {
+                    currentscreen = 2;
+                }
+                break;
+            }
+            case 2: {
+                //playGame()
+                DrawText("insert gameplay function here", 250, 400, 30, WHITE);
+                break;
+            }
+        }
+
+
+        EndDrawing();
+        //----------------------------------------------------------------------------------
     }
+
+    // De-Initialization
+    //--------------------------------------------------------------------------------------
+    CloseWindow();        // Close window and OpenGL context
+    return 0;
 }
