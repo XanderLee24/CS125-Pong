@@ -1,4 +1,4 @@
-Embry-Riddle Aeronautical University - CS125 \n
+Embry-Riddle Aeronautical University - CS125
 Final Project: Programming Pong in C
 Authors: Xander Lee and Thomas Silva
 Date of Submission: 4/6/2026
