@@ -39,6 +39,16 @@ struct rectPos {
 } rectPos;
 
 // ****Functions****
+int randBallLaunch(int x) {
+    if ((rand()% 2 + 1) == 1) {
+        return x;  // If rand=1 ball launches down/left
+    }
+
+    else {
+        return x*-1;  // Else, the ball launches up/right
+    }
+}
+
 float resetBall(int direction) {
     //Center Ball (After a Score)
     ballPosition.x = GetScreenWidth() / 2.0f;
@@ -46,7 +56,7 @@ float resetBall(int direction) {
 
     // Ball Vector Direction (After a Score)
     ballSpeed.x = 10 * direction;  //Initial direction decided by previous winner
-    ballSpeed.y = 7;
+    ballSpeed.y = randBallLaunch(7);  // Randomized
 
     return 1.5f;
 }
@@ -97,16 +107,22 @@ void buildMapBasic(int screenWidth, int screenHeight) { //Stages consistent map 
 
 // Set Ball/Paddle Locations and Features
 void initGame() {
+    // Set Ball in the Center of Screen and Randomize Vectors
     ballPosition = (Vector2){ screenWidth / 2, screenHeight / 2 };
-    ballSpeed = (Vector2){ 10, 7 };
+    ballSpeed = (Vector2){ randBallLaunch(10), randBallLaunch(7) };
 
+    // Position Paddles Halfway Up Screen
     rectPos.g = screenHeight / 2;
     rectPos.p = screenHeight / 2;
 
+    // Set Size of Paddles
     greenPaddle = (Rectangle){ 75, rectPos.g, paddleWidth, paddleHeight };
     purplePaddle = (Rectangle){ 905, rectPos.p, paddleWidth, paddleHeight };
 
     bounce = (rand() % 4 + 10) / 100.0f;  //Random bounce coefficient
+
+    // Momentarily Freeze Ball on Game Initialization
+    freezeTimer = 1.5f;
 }
 
 // ****GAMEPLAY****
@@ -168,7 +184,7 @@ void gamePlay() {
     greenPaddle.y = rectPos.g;
     purplePaddle.y = rectPos.p;
 
-    // ----Ball Movement+----
+    // ----Ball Movement----
     if (freezeTimer > 0) {  //Freezes the ball in place after a score to make the next round start smoother
         freezeTimer -= GetFrameTime(); // Slowly counts 1.0 -> 0.0
     } else {
