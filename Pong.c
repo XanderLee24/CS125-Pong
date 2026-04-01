@@ -51,7 +51,7 @@ int main() {
 
                 // When Timer Hits 0
                 else {
-                    resetScore();
+                    resetScore();  //Resets score every time a new game is about to start
                     currentScreen = 2;  //Game play
                 }
                 break;
@@ -77,13 +77,14 @@ int main() {
                 DrawText("Press Enter to Play Again", (screenWidth/2)-345   , (screenHeight/2)-200, 50, PINK);
 
                 if (IsKeyPressed(KEY_ENTER)) {  //Move back to timer if enter is pressed
+                    initGame();  // Reset paddle positions, ball vectors, and ball freeze
                     currentScreen = 1;  //Timer
                     startTime = 0;  //reset timer in case the player goes back to the title screen
                 }
                 break;
             }
         }
-        
+
         EndDrawing();
     }
 
