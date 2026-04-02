@@ -1,13 +1,20 @@
+/*
+Contributors:
+Xander Lee
+Thomas Silva
+*/
+
+#include "raylib.h"
+#include "Header.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
-#include "raylib.h"
+#include <string.h>
 
 // ****GLOBAL VARIABLES****
 int GS = 0; //Green Score
 int PS = 0;  //Purple Score
-int gameNum = 0;
+int gameNum = 1;
 
 // Text based versions of scores to print on screen
 char Gscore[5] = "0";
@@ -36,7 +43,7 @@ float freezeTimer = 0.0f;
 struct rectPos {
     int g;
     int p;
-} rectPos;
+}rectPos;
 
 // ****Functions****
 int randBallLaunch(int x) {
@@ -71,9 +78,21 @@ void purpleScore() {
     sprintf(Pscore, "%d", PS);
 }
 
-void keepScore() {
-    FILE* score = fopen("score.txt", "a");
-    fprintf(score, "Game %d: \nGreen Score: %d\n Purple Score: %d\n\n", gameNum, GS, PS);
+// Save Game Session Time Stamp
+long timeStamp() {
+    time_t now = time(NULL);
+    return now;
+}
+
+// Log Game Information to score.txt
+void keepScore(long now) {
+    char* string_time = ctime(&now);  //Makes the time stamp human-readable
+    string_time[strlen(string_time) - 1] = '\0';  //Strips the new line character from the stamp
+    FILE* score = fopen("score.txt", "a");  //Opens score.txt for logging
+    if (gameNum == 1) {  //Only time stamps once per play session
+        fprintf(score, "******%s******\n", string_time);  //Prints time stamp
+    }
+    fprintf(score, "Game %d: \nGreen Score: %d\nPurple Score: %d\n\n", gameNum, GS, PS);  //Prints score
     fclose(score);
 }
 
@@ -112,8 +131,8 @@ void initGame() {
     ballSpeed = (Vector2){ randBallLaunch(10), randBallLaunch(7) };
 
     // Position Paddles Halfway Up Screen
-    rectPos.g = screenHeight / 2;
-    rectPos.p = screenHeight / 2;
+    rectPos.g = screenHeight / 2 -50;
+    rectPos.p = screenHeight / 2 -50;
 
     // Set Size of Paddles
     greenPaddle = (Rectangle){ 75, rectPos.g, paddleWidth, paddleHeight };
@@ -197,4 +216,11 @@ void gamePlay() {
     DrawRectangleRec(greenPaddle, GREEN);
     DrawRectangleRec(purplePaddle, PURPLE);
     DrawCircleV(ballPosition, ballRadius, WHITE);
+}
+
+void forLoop() {
+    int x;
+    for (x = 0; x < 10; x++) {
+        printf("THANKS FOR PLAYING!!!\n");
+    }
 }
