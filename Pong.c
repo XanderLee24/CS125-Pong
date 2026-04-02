@@ -1,5 +1,11 @@
+/*
+Contributors:
+Xander Lee
+Thomas Silva
+*/
+
 #include "raylib.h"
-#include "Functions.h"
+#include "Header.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -9,6 +15,7 @@ int main() {
     // ****Initialization****
     int currentScreen = 0;  //Start screen
     double startTime;  //Later used for timer
+    long now = timeStamp();  //Save game session time stamp for score.txt
 
     InitWindow(screenWidth, screenHeight, "Pong window");  //Opens GUI
     srand(time(NULL));  //Random seed
@@ -61,7 +68,8 @@ int main() {
             case 2: {
                 gamePlay();
                 if (IsKeyPressed(KEY_ENTER)) {  //Move to score screen if enter is pressed
-                    keepScore();  //Save Score in file
+                    keepScore(now);  //Save score in file
+                    gameNum++;  //Update number
                     currentScreen = 3;  //Score screen
                 }
                 break;
@@ -88,7 +96,12 @@ int main() {
         EndDrawing();
     }
 
-    // De-Initialization
+    // ****De-Initialization****
+    if (currentScreen == 2) { //Log score if players close game mid-match
+        keepScore(now);
+    }
+
     CloseWindow();
+    forLoop();
     return 0;
 }
