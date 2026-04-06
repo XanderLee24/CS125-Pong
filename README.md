@@ -9,7 +9,8 @@ Date of Submission: 4/6/2026
 
 NOTE***
 This project requires the external library Raylib to function
-- https://www.raylib.com/ 
+- https://www.raylib.com/
+- UPDATE: You can download Pong.exe from releases, and that will come with all dependencies and allow you to play it without installing anything else. This only works with Windows currently, however, and the logging feature doesn't work as it does while running through an IDE. 
 
 References:
 
